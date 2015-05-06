@@ -102,21 +102,21 @@ extern "C"
 #define HAL_LED_BLINK_DELAY()   st( { volatile uint32 i; for (i=0; i<0x5800; i++) { }; } )
 
 /* 1 - Green */
-#define LED1_BV                        BV(0)
-#define LED1_SBIT                      P1_0
+#define LED1_BV                        BV(2)
+#define LED1_SBIT                      P1_2
 #define LED1_DDR                       P1DIR
 #define LED1_POLARITY                  ACTIVE_HIGH
 
 #ifdef HAL_BOARD_CC2530EB_REV17
   /* 2 - Red */
-  #define LED2_BV                      BV(1)
-  #define LED2_SBIT                    P1_1
+  #define LED2_BV                      BV(3)
+  #define LED2_SBIT                    P1_3
   #define LED2_DDR                     P1DIR
   #define LED2_POLARITY                ACTIVE_HIGH
 
-  /* 3 - Yellow */
-  #define LED3_BV                      BV(4)
-  #define LED3_SBIT                    P1_4
+  /* 3 - BLUE */
+  #define LED3_BV                      BV(1)
+  #define LED3_SBIT                    P1_1
   #define LED3_DDR                     P1DIR
   #define LED3_POLARITY                ACTIVE_HIGH
 #endif
@@ -388,8 +388,10 @@ st( \
 #endif
 
 /* Set to TRUE enable LCD usage, FALSE disable it */
+#if 0
 #ifndef HAL_LCD
 #define HAL_LCD TRUE
+#endif
 #endif
 
 /* Set to TRUE enable LED usage, FALSE disable it */
@@ -401,8 +403,10 @@ st( \
 #endif
 
 /* Set to TRUE enable KEY usage, FALSE disable it */
+#if 0
 #ifndef HAL_KEY
 #define HAL_KEY TRUE
+#endif
 #endif
 
 /* Set to TRUE enable UART usage, FALSE disable it */

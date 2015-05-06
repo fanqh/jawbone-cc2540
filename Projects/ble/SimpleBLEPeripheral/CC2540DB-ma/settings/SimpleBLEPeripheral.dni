@@ -8,11 +8,29 @@ UseTrigger=1
 TriggerName=main
 LimitSize=0
 ByteLimit=50
+[DebugChecksum]
+Checksum=462051121
+[CallStack]
+ShowArgs=0
+[Disassembly]
+MixedMode=1
+[BreakpointUsageDialog]
+Placement=_ 751 391 1188 669
+[watch_formats]
+Fmt0={W}0:DebounceCount	4	1
 [Breakpoints]
-Count=0
+Bp0=_ "STD_CODE" "{$PROJ_DIR$\..\..\..\..\Components\hal\target\CC2540EB\hal_lcd.c}.237.3" 0 0 0 0 "" 0 ""
+Count=1
 [ChipconEmu]
-Stop timers on halt=1
+Stop timers on halt=0
 Leave target running=1
+[Log file]
+LoggingEnabled=_ 0
+LogFile=_ ""
+Category=_ 0
+[TermIOLog]
+LoggingEnabled=_ 0
+LogFile=_ ""
 [Aliases]
 Count=0
 SuppressDialog=0

@@ -50,6 +50,8 @@
 #include "hal_led.h"
 #include "hal_key.h"
 #include "hal_lcd.h"
+#include "hal_uart.h"
+#include "hal_dma.h"
 
 #include "gatt.h"
 
@@ -84,7 +86,7 @@
  */
 
 // How often to perform periodic event
-#define SBP_PERIODIC_EVT_PERIOD                   5000
+#define SBP_PERIODIC_EVT_PERIOD                   10
 
 // What is the advertising interval when device is discoverable (units of 625us, 160=100ms)
 #define DEFAULT_ADVERTISING_INTERVAL          160
@@ -123,6 +125,11 @@
 
 // Length of bd addr as a string
 #define B_ADDR_STR_LEN                        15
+
+#define HAL_KEY_SW_PORT   P0
+#define HAL_KEY_SW_BIT    BV(1)
+#define HAL_KEY_SW_SEL    P0SEL
+#define HAL_KEY_SW_DIR    P0DIR
 
 /*********************************************************************
  * TYPEDEFS
@@ -217,6 +224,7 @@ static void simpleBLEPeripheral_ProcessOSALMsg( osal_event_hdr_t *pMsg );
 static void peripheralStateNotificationCB( gaprole_States_t newState );
 static void performPeriodicTask( void );
 static void simpleProfileChangeCB( uint8 paramID );
+static void uartCB(uint8 port, uint8 event);
 
 #if defined( CC2540_MINIDK )
 static void simpleBLEPeripheral_HandleKeys( uint8 shift, uint8 keys );
@@ -251,6 +259,13 @@ static simpleProfileCBs_t simpleBLEPeripheral_SimpleProfileCBs =
 {
   simpleProfileChangeCB    // Charactersitic value change callback
 };
+
+
+void Hal_Key_Init(void)
+{
+  HAL_KEY_SW_SEL &= ~(HAL_KEY_SW_BIT);    /* Set pin function to GPIO */
+  HAL_KEY_SW_DIR &= ~(HAL_KEY_SW_BIT);    /* Set pin direction to Input */
+}
 /*********************************************************************
  * PUBLIC FUNCTIONS
  */
@@ -271,6 +286,7 @@ static simpleProfileCBs_t simpleBLEPeripheral_SimpleProfileCBs =
  */
 void SimpleBLEPeripheral_Init( uint8 task_id )
 {
+  halUARTCfg_t uartConfig;
   simpleBLEPeripheral_TaskID = task_id;
 
   // Setup the GAP
@@ -280,7 +296,7 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   {
     #if defined( CC2540_MINIDK )
       // For the CC2540DK-MINI keyfob, device doesn't start advertising until button is pressed
-      uint8 initial_advertising_enable = FALSE;
+      uint8 initial_advertising_enable = FALSE; 
     #else
       // For other hardware platforms, device starts advertising upon initialization
       uint8 initial_advertising_enable = TRUE;
@@ -419,12 +435,40 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   HCI_EXT_MapPmIoPortCmd( HCI_EXT_PM_IO_PORT_P0, HCI_EXT_PM_IO_PORT_PIN7 );
 
 #endif // defined ( DC_DC_P0_7 )
-
+  
+  uartConfig.configured = TRUE;
+  uartConfig.baudRate = HAL_UART_BR_115200;
+  uartConfig.flowControl = FALSE;
+  uartConfig.flowControlThreshold = 0;
+  uartConfig.rx.maxBufSize = 256;
+  uartConfig.tx.maxBufSize = 256;
+  uartConfig.idleTimeout = 6;
+  uartConfig.intEnable = TRUE;
+  uartConfig.callBackFunc = uartCB;
+  
+  HalUARTOpen(HAL_UART_PORT_0, &uartConfig);
+  HalUARTWrite(HAL_UART_PORT_0, "HELLO UART\r\n", 20);
+ 
+  //key init added by fan temporary
+    Hal_Key_Init();
   // Setup a delayed profile startup
   osal_set_event( simpleBLEPeripheral_TaskID, SBP_START_DEVICE_EVT );
 
 }
 
+
+uint8 UART_RxBuffer[256];
+//----UART0»Øµ÷-----------------------------------------------------------------
+static void uartCB(uint8 port, uint8 event)
+{
+  uint16 ndata;
+  (void)port; 
+  if(event == HAL_UART_RX_TIMEOUT)
+  {
+    ndata = Hal_UART_RxBufLen(HAL_UART_PORT_0);
+    HalUARTRead(HAL_UART_PORT_0, UART_RxBuffer, ndata);
+  }
+}
 /*********************************************************************
  * @fn      SimpleBLEPeripheral_ProcessEvent
  *
@@ -469,7 +513,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
 
     // Set timer for first periodic event
     osal_start_timerEx( simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD );
-
+    HalLedBlink (HAL_LED_1|HAL_LED_2|HAL_LED_3, 0, 50, 100);
     return ( events ^ SBP_START_DEVICE_EVT );
   }
 
@@ -480,7 +524,13 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
     {
       osal_start_timerEx( simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD );
     }
-
+#if 0
+    uint8 value  = 6;
+    uint8 a[5] = {1,2,3,4,5};
+    SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof ( uint8 ), &value );
+    SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR6, 5, &a );
+    HalUARTWrite(HAL_UART_PORT_0, "HELLO UART\r\n",12);
+#endif
     // Perform periodic application task
     performPeriodicTask();
 
@@ -732,9 +782,29 @@ static void performPeriodicTask( void )
 {
   uint8 valueToCopy;
   uint8 stat;
-
+  static uint8 key=1;
+  static uint8 SaveKey = 1;
+  static uint8 DebounceCount = 0x55;
+  
+  DebounceCount = DebounceCount<<1;
+  if ((HAL_KEY_SW_PORT & HAL_KEY_SW_BIT))    /* Key is active low */
+    DebounceCount |= 1UL;
+  else
+    DebounceCount &= ~1UL;
+  
+  if(DebounceCount == 0xff)
+    key = 1;
+  else if(DebounceCount==0)
+    key = 0;
+  
+  if(key!=SaveKey)
+  {
+    SaveKey = key;
+    SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, 1, &key );  
+  }
   // Call to retrieve the value of the third characteristic in the profile
   stat = SimpleProfile_GetParameter( SIMPLEPROFILE_CHAR3, &valueToCopy);
+
 
   if( stat == SUCCESS )
   {
@@ -744,7 +814,7 @@ static void performPeriodicTask( void )
      * a GATT client device, then a notification will be sent every time this
      * function is called.
      */
-    SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof(uint8), &valueToCopy);
+    //SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR3, sizeof(uint8), &valueToCopy);
   }
 }
 
