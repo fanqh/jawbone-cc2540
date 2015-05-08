@@ -188,6 +188,7 @@ static uint8 simpleProfileChar5[SIMPLEPROFILE_CHAR5_LEN] = { 0, 0, 0, 0, 0 };
 static uint8 simpleProfileChar5UserDesp[17] = "Characteristic 5\0";
 
 // Characteristic 6 Value
+static uint8 simpleProfileChar6Props = GATT_PROP_NOTIFY;
 static gattCharCfg_t simpleProfileChar6Config[GATT_MAX_NUM_CONN];
 static uint8 simpleProfileChar6[SIMPLEPROFILE_CHAR6_LEN] = {0, 0, 0, 0, 0};
 static uint8 simpleProfileChar6UserDesp[] = "MIC data\0";
@@ -341,7 +342,7 @@ static gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] =
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
       0,
-      &simpleProfileChar4Props 
+      &simpleProfileChar6Props 
     },
 
       // Characteristic Value 6

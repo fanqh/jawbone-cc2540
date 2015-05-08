@@ -363,6 +363,9 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   VOID OADTarget_AddService();                    // OAD Profile
 #endif
 
+   HAL_TURN_OFF_LED1();
+   HAL_TURN_OFF_LED2();
+   HAL_TURN_OFF_LED3();
   // Setup the SimpleProfile Characteristic Values
   {
     uint8 charValue1 = 1;
@@ -450,6 +453,9 @@ void SimpleBLEPeripheral_Init( uint8 task_id )
   HalUARTWrite(HAL_UART_PORT_0, "HELLO UART\r\n", 20);
  
   //key init added by fan temporary
+  
+    P0DIR &= ~(1 << (5));//Êä³öÉèÖÃ
+    P0_5 = 1; //booto À­µÍ
     Hal_Key_Init();
   // Setup a delayed profile startup
   osal_set_event( simpleBLEPeripheral_TaskID, SBP_START_DEVICE_EVT );
@@ -467,6 +473,12 @@ static void uartCB(uint8 port, uint8 event)
   {
     ndata = Hal_UART_RxBufLen(HAL_UART_PORT_0);
     HalUARTRead(HAL_UART_PORT_0, UART_RxBuffer, ndata);
+   // if(ndata==SIMPLEPROFILE_CHAR6_LEN)
+    if(UART_RxBuffer[0]>128)
+      HAL_TURN_ON_LED3();
+    else
+      HAL_TURN_OFF_LED3();
+    SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof(uint8), UART_RxBuffer );
   }
 }
 /*********************************************************************
@@ -513,7 +525,7 @@ uint16 SimpleBLEPeripheral_ProcessEvent( uint8 task_id, uint16 events )
 
     // Set timer for first periodic event
     osal_start_timerEx( simpleBLEPeripheral_TaskID, SBP_PERIODIC_EVT, SBP_PERIODIC_EVT_PERIOD );
-    HalLedBlink (HAL_LED_1|HAL_LED_2|HAL_LED_3, 0, 50, 100);
+    //HalLedBlink (HAL_LED_1|HAL_LED_2|HAL_LED_3, 0, 50, 100);
     return ( events ^ SBP_START_DEVICE_EVT );
   }
 
@@ -782,8 +794,8 @@ static void performPeriodicTask( void )
 {
   uint8 valueToCopy;
   uint8 stat;
-  static uint8 key=1;
-  static uint8 SaveKey = 1;
+  static uint8 key=0xff;
+  static uint8 SaveKey = 0xff;
   static uint8 DebounceCount = 0x55;
   
   DebounceCount = DebounceCount<<1;
@@ -793,7 +805,7 @@ static void performPeriodicTask( void )
     DebounceCount &= ~1UL;
   
   if(DebounceCount == 0xff)
-    key = 1;
+    key = 0xff;
   else if(DebounceCount==0)
     key = 0;
   
