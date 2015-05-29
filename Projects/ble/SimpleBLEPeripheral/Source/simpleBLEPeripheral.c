@@ -794,10 +794,23 @@ static void performPeriodicTask( void )
 {
   uint8 valueToCopy;
   uint8 stat;
+  uint16 gapConnnectHandle;
   static uint8 key=0xff;
   static uint8 SaveKey = 0xff;
   static uint8 DebounceCount = 0x55;
-  
+//  typedef struct
+//    {
+//      uint16 handle;               //!< Handle of the attribute that has been changed (must be first field)
+//      uint8 len;                   //!< Length of value
+//      uint8 value[ATT_MTU_SIZE-3]; //!< New value of the attribute
+//    } attHandleValueInd_t;
+//  
+  attHandleValueInd_t attValue ={0,2,{0x12,0x23,},
+
+  };
+  attHandleValueNoti_t  attValue1 ={0,2,{0x56,0x78,},};
+    
+    
   DebounceCount = DebounceCount<<1;
   if ((HAL_KEY_SW_PORT & HAL_KEY_SW_BIT))    /* Key is active low */
     DebounceCount |= 1UL;
@@ -814,6 +827,16 @@ static void performPeriodicTask( void )
     SaveKey = key;
     SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, 1, &key );  
   }
+   GAPRole_GetParameter( GAPROLE_CONNHANDLE, &gapConnnectHandle );
+  
+#if 1
+  GATT_Indication( gapConnnectHandle, &attValue, 
+                                  false, simpleBLEPeripheral_TaskID );
+#else
+    GATT_Notification( gapConnnectHandle, &attValue1, 
+                                  false );
+#endif
+
   // Call to retrieve the value of the third characteristic in the profile
   stat = SimpleProfile_GetParameter( SIMPLEPROFILE_CHAR3, &valueToCopy);
 

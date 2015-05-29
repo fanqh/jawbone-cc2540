@@ -70,6 +70,7 @@ extern "C"
 #define SIMPLEPROFILE_CHAR4_UUID            0xFFF4
 #define SIMPLEPROFILE_CHAR5_UUID            0xFFF5
 #define SIMPLEPROFILE_CHAR6_UUID            0xFFF6
+#define SIMPLEPROFILE_CHAR7_UUID            0xFFF7
   
 // Simple Keys Profile Services bit fields
 #define SIMPLEPROFILE_SERVICE               0x00000001
@@ -77,6 +78,7 @@ extern "C"
 // Length of Characteristic 5 in bytes
 #define SIMPLEPROFILE_CHAR5_LEN           5  
 #define SIMPLEPROFILE_CHAR6_LEN           5  
+#define SIMPLEPROFILE_CHAR7_LEN           4
 
 /*********************************************************************
  * TYPEDEFS
