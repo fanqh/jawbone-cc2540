@@ -59,7 +59,9 @@
  * CONSTANTS
  */
 
-#define SERVAPP_NUM_ATTR_SUPPORTED        25
+
+
+
 
 /*********************************************************************
  * TYPEDEFS
@@ -207,7 +209,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
  * Profile Attributes - Table
  */
 
-static gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] = 
+ gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] = 
 {
   // Simple Profile Service
   { 
@@ -459,6 +461,7 @@ bStatus_t SimpleProfile_AddService( uint32 services )
   // Initialize Client Characteristic Configuration attributes
   GATTServApp_InitCharCfg( INVALID_CONNHANDLE, simpleProfileChar4Config );
   GATTServApp_InitCharCfg( INVALID_CONNHANDLE, simpleProfileChar6Config );
+  GATTServApp_InitCharCfg( INVALID_CONNHANDLE, simpleProfileChar7Config );
 
   // Register with Link DB to receive link status change callback
   VOID linkDB_Register( simpleProfile_HandleConnStatusCB );  
@@ -805,10 +808,54 @@ static bStatus_t simpleProfile_WriteAttrCB( uint16 connHandle, gattAttribute_t *
 
       case GATT_CLIENT_CHAR_CFG_UUID:
         
-#if 1
+        
+      if ( pAttr->handle == simpleProfileAttrTbl[CHARATERISTIC4_CONFIG_POS].handle || (pAttr->handle == simpleProfileAttrTbl[CHARATERISTIC6_CONFIG_POS].handle))
+      {
+    
+        status = GATTServApp_ProcessCCCWriteReq( connHandle, pAttr, pValue, len,
+                                                  offset, GATT_CLIENT_CFG_NOTIFY );
+#if 0
+        if ( status == SUCCESS )
+        {
+          uint16 value = BUILD_UINT16( pValue[0], pValue[1] );
+
+          (*bloodPressureServiceCB)( (value == GATT_CFG_NO_OPERATION) ? 
+                                     BLOODPRESSURE_MEAS_NOTI_DISABLED :
+                                     BLOODPRESSURE_MEAS_NOTI_ENABLED);
+        }
+#endif
+      }
+      else if( pAttr->handle == simpleProfileAttrTbl[CHARATERISTIC7_CONFIG_POS].handle)
+      {
+    
+        status = GATTServApp_ProcessCCCWriteReq( connHandle, pAttr, pValue, len,
+                                                   offset, GATT_CLIENT_CFG_NOTIFY );
+#if 0          
+        if ( status == SUCCESS )
+        {
+          uint16 value = BUILD_UINT16( pValue[0], pValue[1] );
+
+          (*bloodPressureServiceCB)( (value == GATT_CFG_NO_OPERATION) ? 
+                                     BLOODPRESSURE_MEAS_NOTI_DISABLED :
+                                     BLOODPRESSURE_MEAS_NOTI_ENABLED);
+        }
+#endif
+      }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+#if 0
         status = GATTServApp_ProcessCCCWriteReq( connHandle, pAttr, pValue, len,
                                                  offset, GATT_CLIENT_CFG_INDICATE );
-#else
          status = GATTServApp_ProcessCCCWriteReq( connHandle, pAttr, pValue, len,
                                                  offset, GATT_CLIENT_CFG_NOTIFY );       
 #endif

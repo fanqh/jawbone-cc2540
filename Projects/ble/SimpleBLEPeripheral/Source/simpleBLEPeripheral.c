@@ -126,10 +126,10 @@
 // Length of bd addr as a string
 #define B_ADDR_STR_LEN                        15
 
-#define HAL_KEY_SW_PORT   P0
-#define HAL_KEY_SW_BIT    BV(1)
-#define HAL_KEY_SW_SEL    P0SEL
-#define HAL_KEY_SW_DIR    P0DIR
+#define HAL_KEY_SW_PORT   P1
+#define HAL_KEY_SW_BIT    BV(0)
+#define HAL_KEY_SW_SEL    P1SEL
+#define HAL_KEY_SW_DIR    P1DIR
 
 /*********************************************************************
  * TYPEDEFS
@@ -467,6 +467,8 @@ uint8 UART_RxBuffer[256];
 //----UART0»Øµ÷-----------------------------------------------------------------
 static void uartCB(uint8 port, uint8 event)
 {
+  
+#if 0
   uint16 ndata;
   (void)port; 
   if(event == HAL_UART_RX_TIMEOUT)
@@ -479,7 +481,9 @@ static void uartCB(uint8 port, uint8 event)
     else
       HAL_TURN_OFF_LED3();
     SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, sizeof(uint8), UART_RxBuffer );
+   
   }
+#endif
 }
 /*********************************************************************
  * @fn      SimpleBLEPeripheral_ProcessEvent
@@ -810,7 +814,7 @@ static void performPeriodicTask( void )
   };
   attHandleValueNoti_t  attValue1 ={0,2,{0x56,0x78,},};
     
-    
+        
   DebounceCount = DebounceCount<<1;
   if ((HAL_KEY_SW_PORT & HAL_KEY_SW_BIT))    /* Key is active low */
     DebounceCount |= 1UL;
@@ -827,12 +831,18 @@ static void performPeriodicTask( void )
     SaveKey = key;
     SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, 1, &key );  
   }
+#if 0
    GAPRole_GetParameter( GAPROLE_CONNHANDLE, &gapConnnectHandle );
   
-#if 1
+  attValue.handle = simpleProfileAttrTbl[23].handle;
+  attValue1.handle = simpleProfileAttrTbl[19].handle;
+  
+//  SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, 1, &key );
+  
+
   GATT_Indication( gapConnnectHandle, &attValue, 
                                   false, simpleBLEPeripheral_TaskID );
-#else
+//#else
     GATT_Notification( gapConnnectHandle, &attValue1, 
                                   false );
 #endif

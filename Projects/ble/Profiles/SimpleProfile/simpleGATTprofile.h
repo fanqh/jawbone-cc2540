@@ -48,6 +48,7 @@ extern "C"
 /*********************************************************************
  * INCLUDES
  */
+#include "gatt.h"
 
 /*********************************************************************
  * CONSTANTS
@@ -79,6 +80,17 @@ extern "C"
 #define SIMPLEPROFILE_CHAR5_LEN           5  
 #define SIMPLEPROFILE_CHAR6_LEN           5  
 #define SIMPLEPROFILE_CHAR7_LEN           4
+   
+   
+#define SERVAPP_NUM_ATTR_SUPPORTED        25
+#define CHARATERISTIC4_VALUE_POS        11
+#define CHARATERISTIC4_CONFIG_POS       12
+
+#define CHARATERISTIC6_VALUE_POS        18
+#define CHARATERISTIC6_CONFIG_POS       19
+
+#define CHARATERISTIC7_VALUE_POS        22
+#define CHARATERISTIC7_CONFIG_POS       23
 
 /*********************************************************************
  * TYPEDEFS
@@ -148,6 +160,9 @@ extern bStatus_t SimpleProfile_SetParameter( uint8 param, uint8 len, void *value
  *          uint16 pointer).
  */
 extern bStatus_t SimpleProfile_GetParameter( uint8 param, void *value );
+
+
+extern gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED];
 
 
 /*********************************************************************
