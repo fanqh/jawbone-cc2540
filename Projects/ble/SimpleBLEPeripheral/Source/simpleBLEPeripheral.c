@@ -127,7 +127,7 @@
 #define B_ADDR_STR_LEN                        15
 
 #define HAL_KEY_SW_PORT   P1
-#define HAL_KEY_SW_BIT    BV(0)
+#define HAL_KEY_SW_BIT    BV(2)
 #define HAL_KEY_SW_SEL    P1SEL
 #define HAL_KEY_SW_DIR    P1DIR
 
