@@ -829,13 +829,19 @@ static void performPeriodicTask( void )
   if(key!=SaveKey)
   {
     SaveKey = key;
-    SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, 1, &key );  
+   // SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, 1, &key );  
+    attHandleValueNoti_t  attValue1 ={0,1,{SaveKey},};
+    GAPRole_GetParameter( GAPROLE_CONNHANDLE, &gapConnnectHandle );
+    attValue.handle = simpleProfileAttrTbl[12].handle;
+    
+    GATT_Notification( gapConnnectHandle, &attValue1, 
+                                  false );
   }
 #if 0
    GAPRole_GetParameter( GAPROLE_CONNHANDLE, &gapConnnectHandle );
   
-  attValue.handle = simpleProfileAttrTbl[23].handle;
-  attValue1.handle = simpleProfileAttrTbl[19].handle;
+  attValue.handle = simpleProfileAttrTbl[12].handle;
+ // attValue1.handle = simpleProfileAttrTbl[19].handle;
   
 //  SimpleProfile_SetParameter( SIMPLEPROFILE_CHAR4, 1, &key );
   

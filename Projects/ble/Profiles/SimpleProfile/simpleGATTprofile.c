@@ -211,7 +211,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
 
  gattAttribute_t simpleProfileAttrTbl[SERVAPP_NUM_ATTR_SUPPORTED] = 
 {
-  // Simple Profile Service
+  // Simple Profile Service    0
   { 
     { ATT_BT_UUID_SIZE, primaryServiceUUID }, /* type */
     GATT_PERMIT_READ,                         /* permissions */
@@ -219,7 +219,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
     (uint8 *)&simpleProfileService            /* pValue */
   },
 #if 1
-    // Characteristic 1 Declaration
+    // Characteristic 1 Declaration           1
     { 
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
@@ -227,7 +227,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       &simpleProfileChar1Props 
     },
 
-      // Characteristic Value 1
+      // Characteristic Value 1             2
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar1UUID },
         GATT_PERMIT_READ | GATT_PERMIT_WRITE, 
@@ -235,7 +235,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         &simpleProfileChar1 
       },
 
-      // Characteristic 1 User Description
+      // Characteristic 1 User Description         3 
       { 
         { ATT_BT_UUID_SIZE, charUserDescUUID },
         GATT_PERMIT_READ, 
@@ -243,7 +243,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         simpleProfileChar1UserDesp 
       },      
 
-    // Characteristic 2 Declaration
+    // Characteristic 2 Declaration                  4
     { 
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
@@ -251,7 +251,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       &simpleProfileChar2Props 
     },
 
-      // Characteristic Value 2
+      // Characteristic Value 2                   5
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar2UUID },
         GATT_PERMIT_READ, 
@@ -259,7 +259,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         &simpleProfileChar2 
       },
 
-      // Characteristic 2 User Description
+      // Characteristic 2 User Description               6
       { 
         { ATT_BT_UUID_SIZE, charUserDescUUID },
         GATT_PERMIT_READ, 
@@ -267,7 +267,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         simpleProfileChar2UserDesp 
       },           
       
-    // Characteristic 3 Declaration
+    // Characteristic 3 Declaration                       7
     { 
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
@@ -275,7 +275,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       &simpleProfileChar3Props 
     },
 
-      // Characteristic Value 3
+      // Characteristic Value 3                      8
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar3UUID },
         GATT_PERMIT_WRITE, 
@@ -283,7 +283,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         &simpleProfileChar3 
       },
 
-      // Characteristic 3 User Description
+      // Characteristic 3 User Description           9
       { 
         { ATT_BT_UUID_SIZE, charUserDescUUID },
         GATT_PERMIT_READ, 
@@ -291,7 +291,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         simpleProfileChar3UserDesp 
       },
 #endif
-    // Characteristic 4 Declaration
+    // Characteristic 4 Declaration                 10
     { 
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
@@ -299,7 +299,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       &simpleProfileChar4Props 
     },
 
-      // Characteristic Value 4
+      // Characteristic Value 4                    11
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar4UUID },
         0, 
@@ -307,7 +307,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         &simpleProfileChar4 
       },
 
-      // Characteristic 4 configuration
+      // Characteristic 4 configuration            12
       { 
         { ATT_BT_UUID_SIZE, clientCharCfgUUID },
         GATT_PERMIT_READ | GATT_PERMIT_WRITE, 
@@ -315,7 +315,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         (uint8 *)simpleProfileChar4Config 
       },
       
-      // Characteristic 4 User Description
+      // Characteristic 4 User Description              13
       { 
         { ATT_BT_UUID_SIZE, charUserDescUUID },
         GATT_PERMIT_READ, 
@@ -323,7 +323,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         simpleProfileChar4UserDesp 
       },
 #if 1     
-    // Characteristic 5 Declaration
+    // Characteristic 5 Declaration                     14
     { 
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
@@ -331,7 +331,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       &simpleProfileChar5Props 
     },
 
-      // Characteristic Value 5
+      // Characteristic Value 5                         15
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar5UUID },
         GATT_PERMIT_AUTHEN_READ, 
@@ -339,7 +339,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         simpleProfileChar5 
       },
 
-      // Characteristic 5 User Description
+      // Characteristic 5 User Description             16
       { 
         { ATT_BT_UUID_SIZE, charUserDescUUID },
         GATT_PERMIT_READ, 
@@ -348,7 +348,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       },
 #endif
 #if 1
-    // Characteristic 6 Declaration
+    // Characteristic 6 Declaration                    17
     { 
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
@@ -356,7 +356,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       &simpleProfileChar6Props 
     },
 
-      // Characteristic Value 6
+      // Characteristic Value 6                      18
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar6UUID },
         0, 
@@ -364,7 +364,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         simpleProfileChar6 
       },
 
-      // Characteristic 6 configuration
+      // Characteristic 6 configuration              19
       { 
         { ATT_BT_UUID_SIZE, clientCharCfgUUID },
         GATT_PERMIT_READ | GATT_PERMIT_WRITE, 
@@ -372,7 +372,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         (uint8 *)simpleProfileChar6Config 
       },
       
-      // Characteristic 6 User Description
+      // Characteristic 6 User Description          20
       { 
         { ATT_BT_UUID_SIZE, charUserDescUUID },
         GATT_PERMIT_READ, 
@@ -382,7 +382,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       
 #endif
 #if 1
-    // Characteristic 7 Declaration
+    // Characteristic 7 Declaration                    21
     { 
       { ATT_BT_UUID_SIZE, characterUUID },
       GATT_PERMIT_READ, 
@@ -390,7 +390,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
       &simpleProfileChar7Props 
     },
 
-      // Characteristic Value 7
+      // Characteristic Value 7                   22
       { 
         { ATT_BT_UUID_SIZE, simpleProfilechar7UUID },
         0, 
@@ -398,7 +398,7 @@ static uint8 simpleProfileChar7UserDesp[] = "MIC data\0";
         simpleProfileChar7 
       },
 
-      // Characteristic 7 configuration
+      // Characteristic 7 configuration            23
       { 
         { ATT_BT_UUID_SIZE, clientCharCfgUUID },
         GATT_PERMIT_READ | GATT_PERMIT_WRITE, 
